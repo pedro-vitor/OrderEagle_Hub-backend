@@ -3,6 +3,7 @@ package com.order.eagle.hub.back.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.entities.status.LifeCircle;
 
@@ -73,7 +74,7 @@ public class Store {
 		this.setSituation(Situations.ACTIVATED);
 	}
 	
-	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "America/Sao_Paulo")
 	public LocalDateTime getCreated_at() {
 		return this.status.getCreated_at();
 	}
@@ -82,6 +83,7 @@ public class Store {
 		this.status.setCreated_at(created_at);
 	}
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "America/Sao_Paulo")
 	public LocalDateTime getUpdated_at() {
 		return this.status.getUpdated_at();
 	}

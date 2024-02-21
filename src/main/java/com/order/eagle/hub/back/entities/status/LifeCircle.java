@@ -16,5 +16,6 @@ public class LifeCircle {
 	@CreationTimestamp
 	public LocalDateTime created_at;
 	public LocalDateTime updated_at;
-	public Situations Situation;
+	
+	public Situations situation;
 }
