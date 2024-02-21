@@ -6,8 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.order.eagle.hub.back.entities.enums.Situations;
 
-import com.order.eagle.hub.back.entities.enums.Situations;
-
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
