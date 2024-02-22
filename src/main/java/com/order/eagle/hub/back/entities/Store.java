@@ -48,6 +48,7 @@ public class Store {
 	private String email;
 	
 	@NotBlank
+	@JsonIgnore
 	private String password;
 	
 	@NotBlank
