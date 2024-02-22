@@ -68,8 +68,7 @@ public class Store {
 	@JsonManagedReference
 	private AddressStore address;
 	
-	public Store(UUID id, String name, String login, String password, String description, String phone, String logo,
-			String banner) {
+	public Store(UUID id, String name, String login, String password, String description, String phone) {
 		
 		this.id = id;
 		this.name = name;
@@ -77,9 +76,6 @@ public class Store {
 		this.password = password;
 		this.description = description;
 		this.phone = phone;
-		this.logo = logo;
-		this.banner = banner;
-		this.setUpdated_at(LocalDateTime.now());
 		this.setSituation(Situations.ACTIVATED);
 	}
 	

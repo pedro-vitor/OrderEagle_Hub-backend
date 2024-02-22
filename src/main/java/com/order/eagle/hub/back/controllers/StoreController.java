@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.eagle.hub.back.entities.Store;
+import com.order.eagle.hub.back.entities.dto.store.StoreGetDTO;
 import com.order.eagle.hub.back.services.StoreService;
 
 @RestController
@@ -33,4 +34,10 @@ public class StoreController {
 		var result = storeService.findById(id);
 		return ResponseEntity.ok().body(result);
 	}
+	
+	@PostMapping
+	public ResponseEntity<Store> insert(@RequestBody StoreGetDTO dto){
+		var result = storeService.insert(dto);
+		return ResponseEntity.ok().body(result);
+	} 
 }
