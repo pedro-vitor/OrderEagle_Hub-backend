@@ -16,4 +16,8 @@ public interface StoreRepository extends JpaRepository<Store, UUID>{
 	
 	@Query("SELECT s FROM Store s WHERE s.id=:id AND s.status.situation <> DISABLED")
 	Optional<Store> findByIdNotDisabled(UUID id);
+	
+	boolean existsByPhone(String phone);
+	
+	boolean existsByEmail(String email);
 }

@@ -28,6 +28,13 @@ public class StoreService {
 	}
 	
 	public Store insert(StoreGetDTO dto) {
+		if(storeRepository.existsByPhone(dto.phone())) {
+			throw new IllegalArgumentException("Telefone ja usado por outra loja");
+		}
+		if(storeRepository.existsByEmail(dto.email())) {
+			throw new IllegalArgumentException("Email ja usado por outra loja");
+		}
+		
 		var result = toStore(dto);
 		result = storeRepository.save(result);
 		return result;
