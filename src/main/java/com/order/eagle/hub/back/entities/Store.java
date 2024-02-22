@@ -37,7 +37,7 @@ public class Store {
 	
 	@Getter
 	@Setter
-	private String login;
+	private String email;
 	
 	@Getter
 	@Setter
@@ -68,11 +68,11 @@ public class Store {
 	@JsonManagedReference
 	private AddressStore address;
 	
-	public Store(UUID id, String name, String login, String password, String description, String phone) {
+	public Store(UUID id, String name, String email, String password, String description, String phone) {
 		
 		this.id = id;
 		this.name = name;
-		this.login = login;
+		this.email = email;
 		this.password = password;
 		this.description = description;
 		this.phone = phone;

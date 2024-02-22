@@ -34,7 +34,7 @@ public class StoreService {
 	}
 	
 	private Store toStore(StoreGetDTO dto) {
-		Store store = new Store(null, dto.name(), dto.login(), dto.password(), dto.description(), dto.phone());
+		Store store = new Store(null, dto.name(), dto.email(), dto.password(), dto.description(), dto.phone());
 		store.setAddress(toAddressStore(dto.address(), store));
 		
 		return store;
