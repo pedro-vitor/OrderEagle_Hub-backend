@@ -4,14 +4,17 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.entities.status.LifeCircle;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,6 +61,12 @@ public class Store {
 	
 	@Embedded
 	private LifeCircle status = new LifeCircle();
+	
+	@Getter
+	@Setter
+	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private AddressStore address;
 	
 	public Store(UUID id, String name, String login, String password, String description, String phone, String logo,
 			String banner) {

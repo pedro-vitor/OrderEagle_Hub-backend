@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.order.eagle.hub.back.entities.AddressStore;
 import com.order.eagle.hub.back.entities.Store;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 
@@ -31,6 +32,13 @@ public class Populator implements CommandLineRunner{
 		
 		storeRepository.saveAll(List.of(s1,s2,s3));
 		
+		
+		AddressStore ad1 = new AddressStore(null, "Olimpio Ribeiro", "81", "Conjunto Palmeiras", "Fortaleza", "Ceara",
+				"60870340", s1);
+		
+		s1.setAddress(ad1);
+		
+		storeRepository.save(s1);
 	}
 
 }

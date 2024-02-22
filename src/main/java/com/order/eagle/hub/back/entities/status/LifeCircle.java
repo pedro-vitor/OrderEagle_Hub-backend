@@ -3,6 +3,7 @@ package com.order.eagle.hub.back.entities.status;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.order.eagle.hub.back.entities.enums.Situations;
 
@@ -15,6 +16,8 @@ public class LifeCircle {
 
 	@CreationTimestamp
 	public LocalDateTime created_at;
+	
+	@UpdateTimestamp
 	public LocalDateTime updated_at;
 	
 	public Situations situation;
