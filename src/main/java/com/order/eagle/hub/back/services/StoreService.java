@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.order.eagle.hub.back.entities.AddressStore;
 import com.order.eagle.hub.back.entities.Store;
@@ -12,6 +14,7 @@ import com.order.eagle.hub.back.entities.dto.store.AddressGetDTO;
 import com.order.eagle.hub.back.entities.dto.store.StoreGetDTO;
 import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.repositories.StoreRepository;
+import com.order.eagle.hub.back.services.util.ToolsService;
 
 @Service
 public class StoreService {
@@ -58,6 +61,13 @@ public class StoreService {
 		storeRepository.save(store);
 	}
 
+	public Store uploadLogoStore(UUID id, MultipartFile logo) {
+		var store = storeRepository.getReferenceById(id);
+		var pathLogo = ToolsService.saveImg(logo);
+		store.setLogo(pathLogo);
+		return storeRepository.save(store);
+	}
+	
 	private Store toStore(StoreGetDTO dto) {
 		Store store = new Store(null, dto.name(), dto.email(), dto.password(), dto.description(), dto.phone());
 		store.setAddress(toAddressStore(dto.address(), store));
