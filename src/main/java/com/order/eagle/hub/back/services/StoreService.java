@@ -10,6 +10,7 @@ import com.order.eagle.hub.back.entities.AddressStore;
 import com.order.eagle.hub.back.entities.Store;
 import com.order.eagle.hub.back.entities.dto.store.AddressGetDTO;
 import com.order.eagle.hub.back.entities.dto.store.StoreGetDTO;
+import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 
 @Service
@@ -46,6 +47,15 @@ public class StoreService {
 		updateValuesStore(curentStore, datasForUpdateStore);
 		
 		return storeRepository.save(curentStore);
+	}
+	
+	public void delete(UUID id) {
+		if(!storeRepository.existsById(id))
+			throw new IllegalArgumentException("Loja não encontrada com o ID: " + id);
+		
+		var store = storeRepository.getReferenceById(id);
+		store.setSituation(Situations.DISABLED);
+		storeRepository.save(store);
 	}
 
 	private Store toStore(StoreGetDTO dto) {

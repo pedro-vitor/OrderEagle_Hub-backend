@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +50,11 @@ public class StoreController {
 	public ResponseEntity<Store> update(@RequestBody StoreGetDTO dto, @PathVariable UUID id){
 		var result = storeService.update(dto, id);
 		return ResponseEntity.ok().body(result);
+	} 
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delte(@PathVariable UUID id){
+		storeService.delete(id);
+		return ResponseEntity.noContent().build();
 	} 
 }
