@@ -12,19 +12,26 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.order.eagle.hub.back.entities.enums.TypeUpload;
+
 public class ToolsService {
 
-	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyyMMddHHmmss");
+	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyyMMddHHmmssSS");
 	
-	private static final String PATH_UPLOADS = "src/main/resources/static/img";
+	private static final String PATH_UPLOAD_LOGO = "src/main/resources/static/logo";
+	
+	private static final String PATH_UPLOAD_BANNER = "src/main/resources/static/banner";
 	
 	private static final String NAME_IMG = "img" + FORMAT_DATE.format(new Date());
 	
 	private static final List<String> TYPE_IMG = Arrays.asList("png", "jpg", "jpeg");
 	
-	public static String saveImg(MultipartFile file) {
+	public static String saveImg(MultipartFile file, TypeUpload type) {
 		try {
-			Path directoryUploads = Paths.get(PATH_UPLOADS);
+			
+			var chosenType = type == TypeUpload.LOGO ? PATH_UPLOAD_LOGO : PATH_UPLOAD_BANNER;
+			
+			Path directoryUploads = Paths.get(chosenType);
 			if(!Files.exists(directoryUploads)) {
 				Files.createDirectories(directoryUploads);
 			}

@@ -64,5 +64,11 @@ public class StoreController {
 	public ResponseEntity<Store> uploadLogo(@RequestParam("logo") MultipartFile logo, @PathVariable UUID id){
 		var result = storeService.uploadLogoStore(id, logo);
 		return ResponseEntity.ok().body(result);
-	} 
+	}
+	
+	@PostMapping("upload/banner/{id}")
+	public ResponseEntity<Store> uploadBanner(@RequestParam("banner") MultipartFile banner, @PathVariable UUID id){
+		var result = storeService.uploadBannerStore(id, banner);
+		return ResponseEntity.ok().body(result);
+	}
 }
