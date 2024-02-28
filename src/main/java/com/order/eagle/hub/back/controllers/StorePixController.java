@@ -27,8 +27,8 @@ public class StorePixController {
 	@Autowired
 	private StorePixService storePixService;
 	
-	@GetMapping("/{idStore}")
-	public ResponseEntity<StorePix> findStorePixByStore(@PathVariable UUID idStore){
+	@GetMapping
+	public ResponseEntity<StorePix> findStorePixByStore(@RequestParam("store") UUID idStore){
 		var result = storePixService.findByStore(idStore);
 		return ResponseEntity.ok().body(result);
 	}
@@ -49,7 +49,7 @@ public class StorePixController {
 	}
 	
 	@DeleteMapping("/{idStore}")
-	public ResponseEntity<StorePix> updateStorePixByStore(@PathVariable UUID idStore){
+	public ResponseEntity<StorePix> deleteStorePixByStore(@PathVariable UUID idStore){
 		storePixService.delete(idStore);
 		return ResponseEntity.noContent().build();
 	}

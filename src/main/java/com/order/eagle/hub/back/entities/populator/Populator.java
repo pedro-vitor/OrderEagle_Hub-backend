@@ -1,5 +1,6 @@
 package com.order.eagle.hub.back.entities.populator;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.context.annotation.Profile;
 
 import com.order.eagle.hub.back.entities.AddressStore;
 import com.order.eagle.hub.back.entities.Store;
+import com.order.eagle.hub.back.entities.StoreHour;
 import com.order.eagle.hub.back.entities.StorePix;
 import com.order.eagle.hub.back.entities.enums.TypePix;
+import com.order.eagle.hub.back.entities.enums.WeekDay;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 
 @Configuration
@@ -40,6 +43,18 @@ public class Populator implements CommandLineRunner{
 		StorePix sp1 = new StorePix(null, "06498125306", TypePix.CPF, "pedro vitor silva de sousa", "Nu Bank", s1);
 		
 		s1.setPix(sp1);
+		
+		storeRepository.save(s1);
+		
+		StoreHour sh1 = new StoreHour(null, WeekDay.SUNDAY, null, null, s1);
+		StoreHour sh2 = new StoreHour(null, WeekDay.MONDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
+		StoreHour sh3 = new StoreHour(null, WeekDay.TUESDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
+		StoreHour sh4 = new StoreHour(null, WeekDay.WEDNESDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
+		StoreHour sh5 = new StoreHour(null, WeekDay.THURSDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
+		StoreHour sh6 = new StoreHour(null, WeekDay.FRIDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
+		StoreHour sh7 = new StoreHour(null, WeekDay.SATURDAY, LocalTime.of(8, 0),  LocalTime.of(13, 0), s1);
+		
+		s1.getStoreHours().addAll(List.of(sh1, sh2, sh3, sh4, sh5, sh6, sh7));
 		
 		storeRepository.save(s1);
 	}
