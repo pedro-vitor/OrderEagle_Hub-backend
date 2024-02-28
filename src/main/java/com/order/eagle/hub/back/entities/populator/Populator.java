@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Profile;
 
 import com.order.eagle.hub.back.entities.AddressStore;
 import com.order.eagle.hub.back.entities.Store;
+import com.order.eagle.hub.back.entities.StorePix;
+import com.order.eagle.hub.back.entities.enums.TypePix;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 
 @Configuration
@@ -32,6 +34,12 @@ public class Populator implements CommandLineRunner{
 				"60870340", s1);
 		
 		s1.setAddress(ad1);
+		
+		storeRepository.save(s1);
+		
+		StorePix sp1 = new StorePix(null, "06498125306", TypePix.CPF, "pedro vitor silva de sousa", "Nu Bank", s1);
+		
+		s1.setPix(sp1);
 		
 		storeRepository.save(s1);
 	}

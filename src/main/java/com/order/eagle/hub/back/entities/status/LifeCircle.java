@@ -7,13 +7,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.order.eagle.hub.back.entities.enums.Situations;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 public class LifeCircle {
 
+	@Column(updatable = false)
 	@CreationTimestamp
 	public LocalDateTime created_at;
 	

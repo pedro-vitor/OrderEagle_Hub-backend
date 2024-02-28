@@ -3,91 +3,69 @@ package com.order.eagle.hub.back.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.order.eagle.hub.back.entities.enums.Situations;
+import com.order.eagle.hub.back.entities.enums.TypePix;
 import com.order.eagle.hub.back.entities.status.LifeCircle;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Table(name = "tb_store_pix")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity
-@Table(name = "tb_store")
-public class Store {
+public class StorePix {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	@EqualsAndHashCode.Include
 	private UUID id;
 	
 	@NotBlank
-	private String name;
+	private String pixKey;
+	
+	@NotNull
+	private TypePix typePix;
 	
 	@NotBlank
-	@Email
-	@Column(unique = true)
-	private String email;
+	private String owner;
 	
 	@NotBlank
-	@JsonIgnore
-	private String password;
-	
-	@NotBlank
-	private String description;
-	
-	@NotBlank
-	@Column(unique = true)
-	private String phone;
-	
-	private String logo;
-	
-	private String banner;
+	private String bank;
 	
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
 	@Embedded
 	private LifeCircle status = new LifeCircle();
-
-	/*
-	 * Associações
-	 */
 	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private AddressStore address;
+	@OneToOne
+	@JoinColumn(name = "store_id")
+	@JsonBackReference
+	private Store store;
 	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private StorePix pix;
-	
-	public Store(UUID id, String name, String email, String password, String description, String phone) {
-		
+	public StorePix(UUID id, String pixKey, TypePix typePix, String owner, String bank, Store store) {
 		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.description = description;
-		this.phone = phone;
-		this.setSituation(Situations.ACTIVATED);
+		this.pixKey = pixKey;
+		this.typePix = typePix;
+		this.owner = owner;
+		this.bank = bank;
+		this.store = store;
+		setSituation(Situations.ACTIVATED);
 	}
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "America/Sao_Paulo")
@@ -116,4 +94,5 @@ public class Store {
 	public void setSituation(Situations situation) {
 		this.status.setSituation(situation);
 	}
+	
 }
