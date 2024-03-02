@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.order.eagle.hub.back.entities.AddressStore;
+import com.order.eagle.hub.back.entities.SocialMedia;
 import com.order.eagle.hub.back.entities.Store;
+import com.order.eagle.hub.back.entities.StoreHour;
+import com.order.eagle.hub.back.entities.StorePix;
 import com.order.eagle.hub.back.entities.dto.store.AddressGetDTO;
 import com.order.eagle.hub.back.entities.dto.store.StoreGetDTO;
 import com.order.eagle.hub.back.entities.enums.Situations;
@@ -57,6 +60,11 @@ public class StoreService {
 			throw new IllegalArgumentException("Loja não encontrada com o ID: " + id);
 		
 		var store = storeRepository.getReferenceById(id);
+		
+		this.disabledPixInforFromStore(store.getPix());
+		this.disabledStoreHourFromStore(store.getStoreHours());
+		this.disabledSocialMediaFromStore(store.getSocialMedias());
+		
 		store.setSituation(Situations.DISABLED);
 		storeRepository.save(store);
 	}
@@ -104,29 +112,47 @@ public class StoreService {
 		addressCurentStore.setPostalCode(datasForUpdateAddressStore.getPostalCode());
 	}
 	
-	public void verifyExistsStorePhoneToInsert(String phone) {
+	private void verifyExistsStorePhoneToInsert(String phone) {
 		if(storeRepository.existsByPhone(phone)) {
 			throw new IllegalArgumentException("Telefone ja usado por outra loja");
 		}
 	}
 	
-	public void verifyExistsStoreEmailToInsert(String email) {
+	private void verifyExistsStoreEmailToInsert(String email) {
 		if(storeRepository.existsByEmail(email)) {
 			throw new IllegalArgumentException("Email ja usado por outra loja");
 		}
 	}
 	
-	public void verifyExistsStorePhoneToUpdate(String phone, Store store) {
+	private void verifyExistsStorePhoneToUpdate(String phone, Store store) {
 		var result = storeRepository.findByPhone(phone);
 		if(result != null && !result.equals(store) && result.getPhone().equals(phone)) {
 			throw new IllegalArgumentException("Telefone já usado por outra loja");
 		}
 	}
 	
-	public void verifyExistsStoreEmailToUpdate(String email, Store store) {
+	private void verifyExistsStoreEmailToUpdate(String email, Store store) {
 		var result = storeRepository.findByEmail(email);
 		if(result != null && !result.equals(store) && result.getEmail().equals(email)) {
 			throw new IllegalArgumentException("Email já usado por outra loja");
+		}
+	}
+	
+	private void disabledPixInforFromStore(StorePix storePix) {
+		if(storePix != null) {
+			storePix.setSituation(Situations.DISABLED);
+		}
+	}
+	
+	private void disabledSocialMediaFromStore(List<SocialMedia> socialMediaList) {
+		if(!socialMediaList.isEmpty()) {
+			socialMediaList.forEach(sm -> sm.setSituation(Situations.DISABLED));
+		}
+	}
+	
+	private void disabledStoreHourFromStore(List<StoreHour> storeHourList) {
+		if(!storeHourList.isEmpty()) {
+			storeHourList.forEach(sh -> sh.setSituation(Situations.DISABLED));
 		}
 	}
 }
