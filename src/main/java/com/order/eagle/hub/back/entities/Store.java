@@ -92,6 +92,10 @@ public class Store {
 	@Setter(AccessLevel.NONE)
 	private List<SocialMedia> socialMedias = new ArrayList<>();
 	
+	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private Menu menu;
+	
 	public Store(UUID id, String name, String email, String password, String description, String phone) {
 		
 		this.id = id;
@@ -100,6 +104,7 @@ public class Store {
 		this.password = password;
 		this.description = description;
 		this.phone = phone;
+		this.menu = new Menu(null, this);
 		this.setSituation(Situations.ACTIVATED);
 	}
 	
