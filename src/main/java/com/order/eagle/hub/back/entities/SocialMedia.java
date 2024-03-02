@@ -1,28 +1,25 @@
 package com.order.eagle.hub.back.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.order.eagle.hub.back.entities.enums.Situations;
+import com.order.eagle.hub.back.entities.enums.SocialMediaType;
 import com.order.eagle.hub.back.entities.status.LifeCircle;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,72 +31,35 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_store")
-public class Store {
+@Table(name = "tb_social_media")
+public class SocialMedia {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@EqualsAndHashCode.Include
 	private UUID id;
 	
-	@NotBlank
-	private String name;
+	@NotNull
+	private SocialMediaType type;
 	
 	@NotBlank
-	@Email
-	@Column(unique = true)
-	private String email;
-	
-	@NotBlank
-	@JsonIgnore
-	private String password;
-	
-	@NotBlank
-	private String description;
-	
-	@NotBlank
-	@Column(unique = true)
-	private String phone;
-	
-	private String logo;
-	
-	private String banner;
+	private String url;
 	
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
 	@Embedded
 	private LifeCircle status = new LifeCircle();
 
-	/*
-	 * Associações
-	 */
+	@ManyToOne
+	@JoinColumn(name = "store_id")
+	@JsonBackReference
+	private Store store;
 	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private AddressStore address;
-	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private StorePix pix;
-	
-	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	@Setter(AccessLevel.NONE)
-	private List<StoreHour> storeHours = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	@Setter(AccessLevel.NONE)
-	private List<SocialMedia> socialMedias = new ArrayList<>();
-	
-	public Store(UUID id, String name, String email, String password, String description, String phone) {
-		
+	public SocialMedia(UUID id, SocialMediaType type, String url, Store store) {
 		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.description = description;
-		this.phone = phone;
+		this.type = type;
+		this.url = url;
+		this.store = store;
 		this.setSituation(Situations.ACTIVATED);
 	}
 	

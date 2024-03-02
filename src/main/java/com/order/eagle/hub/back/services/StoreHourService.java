@@ -1,7 +1,9 @@
 package com.order.eagle.hub.back.services;
 
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -65,10 +67,15 @@ public class StoreHourService {
 	}
 	
 	private void verifyRepeatedDays(List<StoreHour> listStoreHour) {
-		for(WeekDay day : WeekDay.values()) {
-			var result = listStoreHour.stream().filter(sh -> sh.getWeekDay().equals(day)).collect(Collectors.toList()).size();
-			if(result > 1)
+		Set<WeekDay> seenDays = new HashSet<>();
+		
+		for(StoreHour storeHour : listStoreHour) {
+			WeekDay day = storeHour.getWeekDay();
+			
+			if(seenDays.contains(day))
 				throw new IllegalArgumentException("Não permitido cadastro de dias repetidos");
+			
+			seenDays.add(day);
 		}
 	}
 	

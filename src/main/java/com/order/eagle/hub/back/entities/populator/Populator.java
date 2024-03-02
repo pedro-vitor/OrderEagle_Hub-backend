@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.order.eagle.hub.back.entities.AddressStore;
+import com.order.eagle.hub.back.entities.SocialMedia;
 import com.order.eagle.hub.back.entities.Store;
 import com.order.eagle.hub.back.entities.StoreHour;
 import com.order.eagle.hub.back.entities.StorePix;
+import com.order.eagle.hub.back.entities.enums.SocialMediaType;
 import com.order.eagle.hub.back.entities.enums.TypePix;
 import com.order.eagle.hub.back.entities.enums.WeekDay;
 import com.order.eagle.hub.back.repositories.StoreRepository;
@@ -55,6 +57,14 @@ public class Populator implements CommandLineRunner{
 		StoreHour sh7 = new StoreHour(null, WeekDay.SATURDAY, LocalTime.of(8, 0),  LocalTime.of(13, 0), s1);
 		
 		s1.getStoreHours().addAll(List.of(sh1, sh2, sh3, sh4, sh5, sh6, sh7));
+		
+		storeRepository.save(s1);
+		
+		SocialMedia sm1 = new SocialMedia(null, SocialMediaType.WHATSAPP, "http://whatsapp.com/chat?num=85994104003", s1);
+		SocialMedia sm2 = new SocialMedia(null, SocialMediaType.INSTAGRAM, "http://instagam.com/teste1", s1);
+		SocialMedia sm3 = new SocialMedia(null, SocialMediaType.FACEBOOK, "http://facebook.com/test1", s1);
+		
+		s1.getSocialMedias().addAll(List.of(sm1, sm2, sm3));
 		
 		storeRepository.save(s1);
 	}
