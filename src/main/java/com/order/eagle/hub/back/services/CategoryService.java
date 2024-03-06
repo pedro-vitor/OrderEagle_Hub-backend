@@ -20,6 +20,11 @@ public class CategoryService {
 	@Autowired
 	private StoreService storeService;
 	
+	public Category findById(UUID categotyId, UUID storeId) {
+		return categoryRepository.findByIdAndStoreNotDisabled(categotyId, storeId)
+		.orElseThrow(() -> new IllegalArgumentException("Categoria inexistente"));
+	}
+	
 	public List<Category> findByStore(UUID isStore){
 		var listCategory = categoryRepository.findByStore(isStore);
 		if(listCategory.isEmpty())
@@ -57,7 +62,7 @@ public class CategoryService {
 	}
 	
 	public void deleteByStore(UUID categotyId, UUID idStore) {
-		var category = this.findById(categotyId);
+		var category = this.findById(categotyId, idStore);
 		
 		if(!category.getStore().getId().equals(idStore))
 			throw new IllegalArgumentException("Não é possivel apagar a categoria de outra loja");
@@ -93,8 +98,4 @@ public class CategoryService {
 		category.setName(newDatas.getName());
 	}
 
-	private Category findById(UUID categotyId) {
-		return categoryRepository.findById(categotyId)
-		.orElseThrow(() -> new IllegalArgumentException("Categoria inexistente"));
-	}
 }
