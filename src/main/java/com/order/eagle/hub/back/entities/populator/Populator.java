@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.order.eagle.hub.back.entities.AddressStore;
+import com.order.eagle.hub.back.entities.Category;
+import com.order.eagle.hub.back.entities.Product;
 import com.order.eagle.hub.back.entities.SocialMedia;
 import com.order.eagle.hub.back.entities.Store;
 import com.order.eagle.hub.back.entities.StoreHour;
@@ -16,6 +18,8 @@ import com.order.eagle.hub.back.entities.StorePix;
 import com.order.eagle.hub.back.entities.enums.SocialMediaType;
 import com.order.eagle.hub.back.entities.enums.TypePix;
 import com.order.eagle.hub.back.entities.enums.WeekDay;
+import com.order.eagle.hub.back.repositories.CategoryRepository;
+import com.order.eagle.hub.back.repositories.ProductRepository;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 
 @Configuration
@@ -25,6 +29,12 @@ public class Populator implements CommandLineRunner{
 	@Autowired
 	private StoreRepository storeRepository;
 	
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		Store s1 = new Store(null, "Ana Acessórios", "ana@gmail.com", "123456", "Loja de semijoias", "85999999999");
@@ -33,20 +43,18 @@ public class Populator implements CommandLineRunner{
 		
 		Store s3 = new Store(null, "Rei do frango", "rei@gmail.com", "123456", "Loja de frango", "85988888888");
 		
-		storeRepository.saveAll(List.of(s1,s2,s3));
+
 		
 		AddressStore ad1 = new AddressStore(null, "Olimpio Ribeiro", "81", "Conjunto Palmeiras", "Fortaleza", "Ceara",
 				"60870340", s1);
 		
 		s1.setAddress(ad1);
 		
-		storeRepository.save(s1);
 		
 		StorePix sp1 = new StorePix(null, "06498125306", TypePix.CPF, "pedro vitor silva de sousa", "Nu Bank", s1);
 		
 		s1.setPix(sp1);
 		
-		storeRepository.save(s1);
 		
 		StoreHour sh1 = new StoreHour(null, WeekDay.SUNDAY, null, null, s1);
 		StoreHour sh2 = new StoreHour(null, WeekDay.MONDAY, LocalTime.of(8, 0),  LocalTime.of(18, 0), s1);
@@ -58,7 +66,6 @@ public class Populator implements CommandLineRunner{
 		
 		s1.getStoreHours().addAll(List.of(sh1, sh2, sh3, sh4, sh5, sh6, sh7));
 		
-		storeRepository.save(s1);
 		
 		SocialMedia sm1 = new SocialMedia(null, SocialMediaType.WHATSAPP, "http://whatsapp.com/chat?num=85994104003", s1);
 		SocialMedia sm2 = new SocialMedia(null, SocialMediaType.INSTAGRAM, "http://instagam.com/teste1", s1);
@@ -66,7 +73,16 @@ public class Populator implements CommandLineRunner{
 		
 		s1.getSocialMedias().addAll(List.of(sm1, sm2, sm3));
 		
-		storeRepository.save(s1);
+		storeRepository.saveAll(List.of(s1,s2,s3));
+		
+		Category cat1 = new Category(null, "Eletrônico".toUpperCase(), s1);
+		Category cat2 = new Category(null, "Comida".toUpperCase(), s1);
+		
+		Product p1 = new Product(null, "Teclado", "Teclado Bom", 200.0, s1, cat1);
+		Product p2 = new Product(null, "Pastel", "Pastel Bom", 20.0, s1, cat1);
+		
+		categoryRepository.saveAll(List.of(cat1, cat2));
+		productRepository.saveAll(List.of(p1,p2));
 	}
 
 }

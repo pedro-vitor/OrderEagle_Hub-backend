@@ -1,28 +1,24 @@
 package com.order.eagle.hub.back.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.entities.status.LifeCircle;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -35,87 +31,36 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_store")
-public class Store {
+@Table(name = "tb_category")
+public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	@EqualsAndHashCode.Include
 	private UUID id;
 	
 	@NotBlank
+	@EqualsAndHashCode.Include
 	private String name;
-	
-	@NotBlank
-	@Email
-	@Column(unique = true)
-	private String email;
-	
-	@NotBlank
-	@JsonIgnore
-	private String password;
-	
-	@NotBlank
-	private String description;
-	
-	@NotBlank
-	@Column(unique = true)
-	private String phone;
-	
-	private String logo;
-	
-	private String banner;
 	
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
 	@Embedded
 	private LifeCircle status = new LifeCircle();
 
-	/*
-	 * Associações
-	 */
-	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private AddressStore address;
-	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private StorePix pix;
-	
-	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	@Setter(AccessLevel.NONE)
-	private List<StoreHour> storeHours = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	@Setter(AccessLevel.NONE)
-	private List<SocialMedia> socialMedias = new ArrayList<>();
-	
-	@OneToOne(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToOne
+	@JoinColumn(name = "store_id")
 	@JsonBackReference
-	private Menu menu;
+	private Store store;
 	
-	@OneToMany(mappedBy = "store")
-	@JsonBackReference
+	@OneToMany(mappedBy = "category")
 	@Setter(AccessLevel.NONE)
-	private List<Category> categories = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "store")
 	@JsonBackReference
-	@Setter(AccessLevel.NONE)
-	private List<Product> products = new ArrayList<>();
+	private List<Product> products;
 	
-	public Store(UUID id, @NotBlank String name, @NotBlank @Email String email, @NotBlank String password,
-			@NotBlank String description, @NotBlank String phone) {
+	public Category(UUID id, @NotBlank String name, @NotBlank Store store) {
 		this.id = id;
 		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.description = description;
-		this.phone = phone;
-		this.menu = new Menu(null, this);
+		this.store = store;
 		this.setSituation(Situations.ACTIVATED);
 	}
 	
@@ -145,5 +90,4 @@ public class Store {
 	public void setSituation(Situations situation) {
 		this.status.setSituation(situation);
 	}
-	
 }
