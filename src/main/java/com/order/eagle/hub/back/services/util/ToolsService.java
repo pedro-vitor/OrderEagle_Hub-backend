@@ -12,41 +12,33 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.order.eagle.hub.back.entities.enums.TypeUpload;
-
 public class ToolsService {
 
-	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyyMMddHHmmssSS");
-	
-	private static final String PATH_UPLOAD_LOGO = "src/main/resources/static/logo";
-	
-	private static final String PATH_UPLOAD_BANNER = "src/main/resources/static/banner";
-	
-	private static final String NAME_IMG = "img" + FORMAT_DATE.format(new Date());
+	private static  SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyyMMddHHmmssSS");
 	
 	private static final List<String> TYPE_IMG = Arrays.asList("png", "jpg", "jpeg");
 	
-	public static String saveImg(MultipartFile file, TypeUpload type) {
+	public static String saveImg(MultipartFile file, String pathToSaveImg) {
 		try {
 			
-			var chosenType = type == TypeUpload.LOGO ? PATH_UPLOAD_LOGO : PATH_UPLOAD_BANNER;
-			
-			Path directoryUploads = Paths.get(chosenType);
+			Path directoryUploads = Paths.get(pathToSaveImg);
 			if(!Files.exists(directoryUploads)) {
 				Files.createDirectories(directoryUploads);
 			}
 			
+			deleteFilesIfExistsInFolder(directoryUploads);
 			
 			Path pathFile = directoryUploads.resolve(renameFiles(file));
 			Files.copy(file.getInputStream(), pathFile);
 			
 			return pathFile.toString();
 		} catch (IOException e) {
-			throw new Error(e.getMessage());
+			throw new IllegalArgumentException("Erro no Upload do arquivo");
 		}
 	}
 	
 	private static String renameFiles(MultipartFile file) {
+		final String NAME_IMG = "img" + FORMAT_DATE.format(new Date());
 		var currentName = file.getOriginalFilename();
 		var extension = getExtension(currentName);
 		verifyExtension(extension);
@@ -63,5 +55,17 @@ public class ToolsService {
 		var result = TYPE_IMG.stream().filter(ex -> extension.equals(ex)).collect(Collectors.toList());
 		if(result.isEmpty())
 			throw new IllegalArgumentException("Tipo de arquivo inválido");
+	}
+	
+	private static void deleteFilesIfExistsInFolder(Path pathToUploads) throws IOException {
+		var listFiles = Files.list(pathToUploads).collect(Collectors.toList());
+		if(!listFiles.isEmpty())
+			listFiles.forEach(file -> { 
+				try {
+					Files.deleteIfExists(file);
+				} catch (IOException e) {
+					throw new IllegalArgumentException("Erro ao apagar o Arquivo");
+				}
+			});
 	}
 }

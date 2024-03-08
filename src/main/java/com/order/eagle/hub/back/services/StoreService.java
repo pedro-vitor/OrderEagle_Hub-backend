@@ -15,13 +15,16 @@ import com.order.eagle.hub.back.entities.StorePix;
 import com.order.eagle.hub.back.entities.dto.store.AddressGetDTO;
 import com.order.eagle.hub.back.entities.dto.store.StoreGetDTO;
 import com.order.eagle.hub.back.entities.enums.Situations;
-import com.order.eagle.hub.back.entities.enums.TypeUpload;
 import com.order.eagle.hub.back.repositories.StoreRepository;
 import com.order.eagle.hub.back.services.util.ToolsService;
 
 @Service
 public class StoreService {
 
+	private final String PATH_UPLOAD_LOGO = "src/main/resources/static/store/logo/";
+	
+	private final String PATH_UPLOAD_BANNER = "src/main/resources/static/store/banner/";
+	
 	@Autowired
 	private StoreRepository storeRepository;
 	
@@ -70,15 +73,15 @@ public class StoreService {
 	}
 
 	public Store uploadLogoStore(UUID id, MultipartFile logo) {
-		var store = storeRepository.getReferenceById(id);
-		var pathLogo = ToolsService.saveImg(logo, TypeUpload.LOGO);
+		var store = this.findById(id);
+		var pathLogo = ToolsService.saveImg(logo, this.PATH_UPLOAD_LOGO + store.getId());
 		store.setLogo(pathLogo);
 		return storeRepository.save(store);
 	}
 	
 	public Store uploadBannerStore(UUID id,  MultipartFile banner) {
-		var store = storeRepository.getReferenceById(id);
-		var pathLogo = ToolsService.saveImg(banner, TypeUpload.BANNER);
+		var store = this.findById(id);
+		var pathLogo = ToolsService.saveImg(banner, this.PATH_UPLOAD_BANNER + store.getId());
 		store.setBanner(pathLogo);
 		return storeRepository.save(store);
 	}

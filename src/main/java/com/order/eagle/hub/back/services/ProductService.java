@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.order.eagle.hub.back.entities.Category;
 import com.order.eagle.hub.back.entities.Product;
@@ -12,10 +13,14 @@ import com.order.eagle.hub.back.entities.Store;
 import com.order.eagle.hub.back.entities.dto.product.ProductGetDTO;
 import com.order.eagle.hub.back.entities.enums.Situations;
 import com.order.eagle.hub.back.repositories.ProductRepository;
+import com.order.eagle.hub.back.services.util.ToolsService;
 
 @Service
 public class ProductService {
 
+	private final String PATH_UPLOAD_IMG_PRODUCT = "src/main/resources/static/product/";
+	
+	
 	@Autowired
 	private ProductRepository productRepository;
 	
@@ -63,6 +68,13 @@ public class ProductService {
 		
 		productForDelete.setSituation(Situations.DISABLED);
 		productRepository.save(productForDelete);
+	}
+	
+	public Product uploadImgProduct(UUID productId, MultipartFile logo) {
+		var product = this.findById(productId);
+		var pathLogo = ToolsService.saveImg(logo, this.PATH_UPLOAD_IMG_PRODUCT + product.getStore().getId());
+		product.setImgUrl(pathLogo);
+		return productRepository.save(product);
 	}
 
 	private Product toProduct(ProductGetDTO dto,Category category, Store store) {

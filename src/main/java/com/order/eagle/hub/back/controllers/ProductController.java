@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.order.eagle.hub.back.entities.Product;
@@ -52,5 +53,13 @@ public class ProductController {
 	public ResponseEntity<Void> delete(@PathVariable UUID idProduct, @RequestParam("store") UUID idStore){
 		productService.deleteByStore(idProduct, idStore);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("upload/img/{productId}")
+	public ResponseEntity<Void> uploadBanner(@RequestParam("image") MultipartFile image, @PathVariable UUID productId){
+		var result = productService.uploadImgProduct(productId, image);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("products").
+				replaceQueryParam("store", result.getStore().getId()).build().toUri();
+		return ResponseEntity.created(uri).build();
 	}
 }
